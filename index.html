@@ -39,12 +39,33 @@
       done: false
     }
     items.push(item)
+    //so, every time we sumbit the form (thus, adding an item to the array), we run the populate list function which turns (maps) whatever item was pushed to the array into a <li>. REMEMBER: a mapped array will always return an array of the same number of elements! So here populate list is always recreating the entire list. So for performances sake you would want to look into how to update just the one list item instead of rerendering the entire list. HINT: Learn reactjs 
+    populateList(items, itemsList)
+
     // this clears the form after submit
     this.reset()
-    console.table(items)
+  }
+
+  // we set dish's default value to an empty array so if we forget to pass something to it, it doesn't break our javascript but just loops over an empty array and your map function will work fine
+  function populateList(dish = [], dishList) {
+    // loop over every item in the array and map (take an array of raw data and turn it into other data. So here we take in the object and return a string from each one)
+
+    // any existence of the word checked will make the checkbox checked! (even checked = false) So, we use a ternary operator to say if dish.done is true (which it isn't) set the default value of the checkbox to checked otherwise if it is false set it to equal an empty string. You can check it on and off anyway so not sure why we need this?/
+
+    // also the id property for the checkbox is linked to the for property of the label! Is required to hook the two up.
+    dishList.innerHTML = dish.map((dish, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index=${i} id="item${i}" ${dish.done} ? 'checked' ? '' />
+          <label for="item${i}">${dish.text}</label>
+        </li>  
+      `;
+    }).join('')
   }
 
   addItems.addEventListener('submit', addItem)
+
+  console.log(items)
 
 </script>
 
