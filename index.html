@@ -30,6 +30,22 @@
   const itemsList = document.querySelector('.plates');
   const items = [];
 
+  function addItem (e) {
+    e.preventDefault()
+    // here this references the form element that we are running the add item function on.
+    const text = this.querySelector('[name=item]').value;
+    const item = {
+      text,
+      done: false
+    }
+    items.push(item)
+    // this clears the form after submit
+    this.reset()
+    console.table(items)
+  }
+
+  addItems.addEventListener('submit', addItem)
+
 </script>
 
 
