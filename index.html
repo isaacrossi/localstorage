@@ -28,7 +28,8 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  // at the bottom of the code we are trying to get our local storage 'items' on page load. So, we try to get our items from local storage if they exist, if not, we fall back on the empty array.
+  const items = JSON.parse(localStorage.getItem('items')) || [];
 
   function addItem (e) {
     e.preventDefault()
@@ -41,6 +42,9 @@
     items.push(item)
     //so, every time we sumbit the form (thus, adding an item to the array), we run the populate list function which turns (maps) whatever item was pushed to the array into a <li>. REMEMBER: a mapped array will always return an array of the same number of elements! So here populate list is always recreating the entire list. So for performances sake you would want to look into how to update just the one list item instead of rerendering the entire list. HINT: Learn reactjs 
     populateList(items, itemsList)
+
+    // the first parameter is the key name (can be anything), and the second is a what you want to store. Must be a string value. So we use JSON.stringify(items) which converts your array/object into a json string equivalent. Basically, this puts something into local storage.
+    localStorage.setItem('items', JSON.stringify(items))
 
     // this clears the form after submit
     this.reset()
@@ -65,7 +69,8 @@
 
   addItems.addEventListener('submit', addItem)
 
-  console.log(items)
+  //so here on page load, we are populating the items list with the items saved in local storage. We get them from above 'const items = JSON.parse(localStorage.getItem('items')) || [];' and they are set in the add item function
+  populateList(items, itemsList)
 
 </script>
 
