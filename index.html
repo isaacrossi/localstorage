@@ -51,23 +51,41 @@
   }
 
   // we set dish's default value to an empty array so if we forget to pass something to it, it doesn't break our javascript but just loops over an empty array and your map function will work fine
-  function populateList(dish = [], dishList) {
+  function populateList(plates = [], platesList) {
     // loop over every item in the array and map (take an array of raw data and turn it into other data. So here we take in the object and return a string from each one)
 
     // any existence of the word checked will make the checkbox checked! (even checked = false) So, we use a ternary operator to say if dish.done is true (which it isn't) set the default value of the checkbox to checked otherwise if it is false set it to equal an empty string. You can check it on and off anyway so not sure why we need this?/
 
     // also the id property for the checkbox is linked to the for property of the label! Is required to hook the two up.
-    dishList.innerHTML = dish.map((dish, i) => {
+    platesList.innerHTML = plates.map((plate, i) => {
       return `
         <li>
-          <input type="checkbox" data-index=${i} id="item${i}" ${dish.done} ? 'checked' ? '' />
-          <label for="item${i}">${dish.text}</label>
-        </li>  
+          <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+          <label for="item${i}">${plate.text}</label>
+        </li>
       `;
-    }).join('')
+    }).join('');
+  }
+
+  // when we use .target we get different elements depending on where we click, event the list items
+  function toggleDone(e) {
+    // skip unless it's an input
+    if (!e.target.matches('input')) return;
+    //save the targeted element of the click event
+    const el = e.target;
+    //save the index of the target
+    const index = el.dataset.index;
+    //flip the boolean value of the array item that is at the clicked index.
+    items[index].done = !items[index].done;
+    //put the toggles checkbox states into local storage
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
   }
 
   addItems.addEventListener('submit', addItem)
+
+  //event delegation code
+  itemsList.addEventListener('click', toggleDone)
 
   //so here on page load, we are populating the items list with the items saved in local storage. We get them from above 'const items = JSON.parse(localStorage.getItem('items')) || [];' and they are set in the add item function
   populateList(items, itemsList)
